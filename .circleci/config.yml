@@ -32,6 +32,8 @@ jobs:
           command: |
             echo "🚀 Deploying to production...$MY_SECRET"
             echo "🔐 My secret is $MY_SECRET"
+            SECRET="hardcoded-value"
+            echo "Secret: $SECRET"
 
 workflows:
   version: 2
