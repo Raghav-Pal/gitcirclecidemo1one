@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  hello-world_new:
+  hello-world-new:
     docker:
       - image: cimg/base:stable
     steps:
@@ -13,4 +13,4 @@ workflows:
   version: 2
   say-hello:
     jobs:
-      - hello-world
+      - hello-world-new
