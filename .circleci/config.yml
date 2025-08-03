@@ -8,7 +8,7 @@ jobs:
       - run:
           name: Build
           command: |
-            echo "🔨 Build complete"
+            echo "🔨 Build complete $MY_SECRET"
             echo "🔐 My secret is $MY_SECRET"
 
   test:
@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Deploy
           command: |
-            echo "🚀 Deploying to production..."
+            echo "🚀 Deploying to production...$MY_SECRET"
             echo "🔐 My secret is $MY_SECRET"
 
 workflows:
