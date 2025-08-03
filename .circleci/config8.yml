@@ -1,0 +1,31 @@
+version: 2.1
+
+jobs:
+  job-one:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run: echo "🏃 Job One is running"
+
+  job-two:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run: echo "🏃 Job Two is running"
+
+  final-job:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run: echo "✅ Final job after both jobs"
+
+workflows:
+  version: 2
+  parallel-example:
+    jobs:
+      - job-one
+      - job-two
+      - final-job:
+          requires:
+            - job-one
+            - job-two
