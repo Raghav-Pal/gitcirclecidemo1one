@@ -1,27 +1,38 @@
 version: 2.1
 
 jobs:
-  first-job:
+  build:
     docker:
       - image: cimg/base:stable
     steps:
       - run:
-          name: Step 1
-          command: echo "This is the first job"
+          name: Build Job
+          command: echo "🔨 Build step done"
 
-  second-job:
+  test:
     docker:
       - image: cimg/base:stable
     steps:
       - run:
-          name: Step 2
-          command: echo "This is the second job, after first-job"
+          name: Test Job
+          command: echo "🧪 Running tests..."
+
+  deploy:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Deploy Job
+          command: echo "🚀 Deploying app..."
 
 workflows:
   version: 2
-  simple-workflow:
+  demo-workflow:
     jobs:
-      - first-job
-      - second-job:
+      - build
+      - test:
           requires:
-            - first-job
+            - build
+      - deploy:
+          requires:
+            - test

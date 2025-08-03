@@ -1,0 +1,27 @@
+version: 2.1
+
+jobs:
+  first-job:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Step 1
+          command: echo "This is the first job"
+
+  second-job:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Step 2
+          command: echo "This is the second job, after first-job"
+
+workflows:
+  version: 2
+  simple-workflow:
+    jobs:
+      - first-job
+      - second-job:
+          requires:
+            - first-job
