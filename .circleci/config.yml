@@ -49,7 +49,7 @@ jobs:
       - run:
           name: "Personalized Greeting"
           command: |
-            echo "Hello, << parameters.user-name >>!"
+            echo "Hello, << pipeline.parameters.user-name >>!"
             # This will only work if the secret is set in the UI
             echo "Here is the secret message: $MY_SECRET_MESSAGE"
 
