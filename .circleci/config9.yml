@@ -1,20 +1,23 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@4.12.5
+
 jobs:
-  deploy:
+  build:
     docker:
       - image: cimg/base:stable
     steps:
       - checkout
       - run:
-          name: Deploy Simulation
-          command: echo "🚀 Deploying from branch $CIRCLE_BRANCH"
+          name: Simulate Work
+          command: echo "✅ Build complete"
+      - slack/notify:
+          event: always
+          template: basic_success_1
 
 workflows:
   version: 2
-  deploy-flow:
+  build_and_notify:
     jobs:
-      - deploy:
-          filters:
-            branches:
-              only: main
+      - build

@@ -1,14 +1,6 @@
 version: 2.1
 
-# Parameters make your pipeline dynamic. You can provide them when triggering manually.
-parameters:
-  user-name:
-    type: string
-    default: "World"
-    description: "Name to use for the greeting."
-
 jobs:
-  # ... (keep previous jobs if you like) ...
   # This job creates a file
   create-data:
     docker:
@@ -41,35 +33,32 @@ jobs:
             echo "Reading file from previous job:"
             cat my_output/output.txt
 
-  # This job uses a parameter and a secret environment variable
-  greet-user:
-    docker:
-      - image: cimg/base:2024.01
-    steps:
-      - run:
-          name: "Personalized Greeting"
-          command: |
-            echo "Hello, << parameters.user-name >>!"
-            # This will only work if the secret is set in the UI
-            echo "Here is the secret message: $MY_SECRET_MESSAGE"
 
-  # This job simulates a deployment that only runs on the main branch
-  simulate-deployment:
+  generate-report:
     docker:
       - image: cimg/base:2024.01
     steps:
       - run:
-          name: "Deploying to Production"
-          command: echo "Deployment started..."
+          name: "Generate a slow file and a final report"
+          command: |
+            mkdir -p generated_files
+            echo "This is some data we want to cache." > generated_files/cached_data.txt
+            sleep 5 # Simulate a slow process
+            echo "Final report generated on $(date)" > report.txt
+      - save_cache:
+          key: my-data-cache-v1
+          paths:
+            - generated_files
+      - store_artifacts:
+          path: report.txt
 
 workflows:
   main-workflow:
     jobs:
-      - greet-user
-      - simulate-deployment:
+      # This demonstrates artifacts and caching
+      - generate-report
+      # This shows a sequential workflow using a workspace
+      - create-data
+      - process-data:
           requires:
-            - greet-user
-          filters:
-            branches:
-              only: # This job will ONLY run on pushes to the 'main' branch
-                - main
+            - create-data
