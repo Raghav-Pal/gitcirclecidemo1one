@@ -1,0 +1,20 @@
+version: 2.1
+
+jobs:
+  deploy:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: Deploy Simulation
+          command: echo "🚀 Deploying from branch $CIRCLE_BRANCH"
+
+workflows:
+  version: 2
+  deploy-flow:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only: main
