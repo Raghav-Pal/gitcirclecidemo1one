@@ -1,22 +1,42 @@
 version: 2.1
 
-# Jobs are collections of steps executed in an environment.
 jobs:
-  say-hello:
-    # We use a basic execution environment with common shell tools.
+  # This job creates a file
+  create-data:
     docker:
       - image: cimg/base:2024.01
     steps:
-      - checkout # Checks out your source code (e.g., data.txt)
+      - checkout
       - run:
-          name: "Print a welcome message"
+          name: "Create an output file"
           command: |
-            echo "Hello, CircleCI!"
-            echo "Here are the files in the project:"
-            ls -la
+            mkdir -p my_output
+            echo "Data from the first job" > my_output/output.txt
+      # Persist the my_output directory to the workspace for the next job
+      - persist_to_workspace:
+          root: . # Relative to the project root
+          paths:
+            - my_output
 
-# Workflows orchestrate the running of one or more jobs.
+  # This job reads the file created by the previous job
+  process-data:
+    docker:
+      - image: cimg/base:2024.01
+    steps:
+      - checkout
+      # Attach the workspace saved in the previous job
+      - attach_workspace:
+          at: . # Attach at the project root
+      - run:
+          name: "Process the output file"
+          command: |
+            echo "Reading file from previous job:"
+            cat my_output/output.txt
+
 workflows:
-  main-workflow:
+  sequential-workflow:
     jobs:
-      - say-hello
+      - create-data
+      - process-data:
+          requires: # This makes the workflow sequential
+            - create-data

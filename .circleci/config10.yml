@@ -1,0 +1,22 @@
+version: 2.1
+
+# Jobs are collections of steps executed in an environment.
+jobs:
+  say-hello:
+    # We use a basic execution environment with common shell tools.
+    docker:
+      - image: cimg/base:2024.01
+    steps:
+      - checkout # Checks out your source code (e.g., data.txt)
+      - run:
+          name: "Print a welcome message"
+          command: |
+            echo "Hello, CircleCI!"
+            echo "Here are the files in the project:"
+            ls -la
+
+# Workflows orchestrate the running of one or more jobs.
+workflows:
+  main-workflow:
+    jobs:
+      - say-hello
