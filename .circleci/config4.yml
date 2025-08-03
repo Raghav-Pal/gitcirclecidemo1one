@@ -6,28 +6,28 @@ jobs:
       - image: cimg/base:stable
     steps:
       - run:
-          name: Build
-          command: echo "🔨 Build complete"
+          name: Build Job
+          command: echo "🔨 Build step done"
 
   test:
     docker:
       - image: cimg/base:stable
     steps:
       - run:
-          name: Test
-          command: echo "🧪 All tests passed"
+          name: Test Job
+          command: echo "🧪 Running tests..."
 
   deploy:
     docker:
       - image: cimg/base:stable
     steps:
       - run:
-          name: Deploy
-          command: echo "🚀 Deploying to production..."
+          name: Deploy Job
+          command: echo "🚀 Deploying app..."
 
 workflows:
   version: 2
-  full-ci-cd:
+  demo-workflow:
     jobs:
       - build
       - test:
