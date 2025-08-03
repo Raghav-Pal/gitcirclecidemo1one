@@ -5,44 +5,30 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
-      - run:
-          name: Build
-          command: |
-            echo "🔨 Build complete $MY_SECRET"
-            echo "🔐 My secret is $MY_SECRET"
-            echo "Secret is: ${MY_SECRET}"
-             printf "$MY_SECRET\n"
+      - run: echo "✅ Build successful"
 
-  test:
+  fail-demo:
     docker:
       - image: cimg/base:stable
     steps:
       - run:
-          name: Test
-          command: |
-            echo "🧪 All tests passed"
-            echo "🔐 My secret is $MY_SECRET"
+          name: This Will Fail
+          command: exit 1
 
   deploy:
     docker:
       - image: cimg/base:stable
     steps:
-      - run:
-          name: Deploy
-          command: |
-            echo "🚀 Deploying to production...$MY_SECRET"
-            echo "🔐 My secret is $MY_SECRET"
-            SECRET="hardcoded-value"
-            echo "Secret: $SECRET"
+      - run: echo "🚀 Deployment step (should be skipped if fail-demo fails)"
 
 workflows:
   version: 2
-  full-ci-cd:
+  failure-demo:
     jobs:
       - build
-      - test:
+      - fail-demo:
           requires:
             - build
       - deploy:
           requires:
-            - test
+            - fail-demo

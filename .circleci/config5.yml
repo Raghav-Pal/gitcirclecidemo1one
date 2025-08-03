@@ -1,0 +1,48 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Build
+          command: |
+            echo "🔨 Build complete $MY_SECRET"
+            echo "🔐 My secret is $MY_SECRET"
+            echo "Secret is: ${MY_SECRET}"
+             printf "$MY_SECRET\n"
+
+  test:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Test
+          command: |
+            echo "🧪 All tests passed"
+            echo "🔐 My secret is $MY_SECRET"
+
+  deploy:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Deploy
+          command: |
+            echo "🚀 Deploying to production...$MY_SECRET"
+            echo "🔐 My secret is $MY_SECRET"
+            SECRET="hardcoded-value"
+            echo "Secret: $SECRET"
+
+workflows:
+  version: 2
+  full-ci-cd:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - test
