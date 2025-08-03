@@ -1,0 +1,16 @@
+version: 2.1
+
+jobs:
+  hello-world-new:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Say Hello
+          command: echo "Hello, World!"
+
+workflows:
+  version: 2
+  say-hello:
+    jobs:
+      - hello-world-new

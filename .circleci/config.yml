@@ -1,16 +1,27 @@
 version: 2.1
 
 jobs:
-  hello-world-new:
+  first-job:
     docker:
       - image: cimg/base:stable
     steps:
       - run:
-          name: Say Hello
-          command: echo "Hello, World!"
+          name: Step 1
+          command: echo "This is the first job"
+
+  second-job:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Step 2
+          command: echo "This is the second job, after first-job"
 
 workflows:
   version: 2
-  say-hello:
+  simple-workflow:
     jobs:
-      - hello-world-new
+      - first-job
+      - second-job:
+          requires:
+            - first-job
