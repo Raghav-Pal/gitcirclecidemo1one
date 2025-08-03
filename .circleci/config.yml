@@ -1,34 +1,23 @@
 version: 2.1
 
 jobs:
-  build:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - run: echo "✅ Build successful"
-
-  fail-demo:
+  save-artifact-demo:
     docker:
       - image: cimg/base:stable
     steps:
       - run:
-          name: This Will Fail
-          command: exit 1
-
-  deploy:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - run: echo "🚀 Deployment step (should be skipped if fail-demo fails)"
+          name: Create a log file
+          command: echo "This is a sample log file" > output.log
+      - persist_to_workspace:
+          root: .
+          paths:
+            - output.log
+      - store_artifacts:
+          path: output.log
+          destination: my-log-file
 
 workflows:
   version: 2
-  failure-demo:
+  artifact-flow:
     jobs:
-      - build
-      - fail-demo:
-          requires:
-            - build
-      - deploy:
-          requires:
-            - fail-demo
+      - save-artifact-demo

@@ -1,0 +1,34 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run: echo "✅ Build successful"
+
+  fail-demo:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: This Will Fail
+          command: exit 1
+
+  deploy:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run: echo "🚀 Deployment step (should be skipped if fail-demo fails)"
+
+workflows:
+  version: 2
+  failure-demo:
+    jobs:
+      - build
+      - fail-demo:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - fail-demo
