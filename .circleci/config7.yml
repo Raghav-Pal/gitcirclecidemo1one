@@ -1,0 +1,23 @@
+version: 2.1
+
+jobs:
+  save-artifact-demo:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Create a log file
+          command: echo "This is a sample log file" > output.log
+      - persist_to_workspace:
+          root: .
+          paths:
+            - output.log
+      - store_artifacts:
+          path: output.log
+          destination: my-log-file
+
+workflows:
+  version: 2
+  artifact-flow:
+    jobs:
+      - save-artifact-demo

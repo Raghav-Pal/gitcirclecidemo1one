@@ -1,23 +1,31 @@
 version: 2.1
 
 jobs:
-  save-artifact-demo:
+  job-one:
     docker:
       - image: cimg/base:stable
     steps:
-      - run:
-          name: Create a log file
-          command: echo "This is a sample log file" > output.log
-      - persist_to_workspace:
-          root: .
-          paths:
-            - output.log
-      - store_artifacts:
-          path: output.log
-          destination: my-log-file
+      - run: echo "🏃 Job One is running"
+
+  job-two:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run: echo "🏃 Job Two is running"
+
+  final-job:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run: echo "✅ Final job after both jobs"
 
 workflows:
   version: 2
-  artifact-flow:
+  parallel-example:
     jobs:
-      - save-artifact-demo
+      - job-one
+      - job-two
+      - final-job:
+          requires:
+            - job-one
+            - job-two
