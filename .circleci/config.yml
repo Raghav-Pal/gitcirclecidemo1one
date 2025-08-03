@@ -1,42 +1,33 @@
 version: 2.1
 
 jobs:
-  # This job creates a file
-  create-data:
-    docker:
-      - image: cimg/base:2024.01
-    steps:
-      - checkout
-      - run:
-          name: "Create an output file"
-          command: |
-            mkdir -p my_output
-            echo "Data from the first job" > my_output/output.txt
-      # Persist the my_output directory to the workspace for the next job
-      - persist_to_workspace:
-          root: . # Relative to the project root
-          paths:
-            - my_output
+  # ... (keep the create-data and process-data jobs from above) ...
 
-  # This job reads the file created by the previous job
-  process-data:
+  generate-report:
     docker:
       - image: cimg/base:2024.01
     steps:
-      - checkout
-      # Attach the workspace saved in the previous job
-      - attach_workspace:
-          at: . # Attach at the project root
       - run:
-          name: "Process the output file"
+          name: "Generate a slow file and a final report"
           command: |
-            echo "Reading file from previous job:"
-            cat my_output/output.txt
+            mkdir -p generated_files
+            echo "This is some data we want to cache." > generated_files/cached_data.txt
+            sleep 5 # Simulate a slow process
+            echo "Final report generated on $(date)" > report.txt
+      - save_cache:
+          key: my-data-cache-v1
+          paths:
+            - generated_files
+      - store_artifacts:
+          path: report.txt
 
 workflows:
-  sequential-workflow:
+  main-workflow:
     jobs:
+      # This demonstrates artifacts and caching
+      - generate-report
+      # This shows a sequential workflow using a workspace
       - create-data
       - process-data:
-          requires: # This makes the workflow sequential
+          requires:
             - create-data
