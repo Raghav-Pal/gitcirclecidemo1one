@@ -1,16 +1,19 @@
 version: 2.1
 
 jobs:
-  say-hello:
-    machine:
-      image: ubuntu-2204:current
+  save-artifact:
+    docker:
+      - image: cimg/base:stable
     steps:
-      - checkout
       - run:
-          name: Say Hello from a VM
-          command: echo "Hello from machine executor!"
+          name: Create File
+          command: echo "✅ Test Passed" > result.txt
 
-workflows:
-  hello-workflow:
-    jobs:
-      - say-hello
+      - persist_to_workspace:
+          root: .
+          paths:
+            - result.txt
+
+      - store_artifacts:
+          path: result.txt
+          destination: test-result

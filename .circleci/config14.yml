@@ -1,0 +1,16 @@
+version: 2.1
+
+jobs:
+  say-hello:
+    machine:
+      image: ubuntu-2204:current
+    steps:
+      - checkout
+      - run:
+          name: Say Hello from a VM
+          command: echo "Hello from machine executor!"
+
+workflows:
+  hello-workflow:
+    jobs:
+      - say-hello
