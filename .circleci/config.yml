@@ -20,6 +20,10 @@ jobs:
     docker:
       - image: cimg/node:18.20.2
     steps:
+      - run:
+          name: Create workspace folder
+          command: mkdir -p /workspace
+
       - attach_workspace:
           at: /workspace
 
