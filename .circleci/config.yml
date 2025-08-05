@@ -1,45 +1,34 @@
 version: 2.1
 
-executors:
-  my-executor:
-    docker:
-      - image: buildpack-deps:jessie
-    working_directory: /tmp
-
 jobs:
-  flow:
-    executor: my-executor
+  create_file:
+    docker:
+      - image: cimg/base:stable
     steps:
-      - run: mkdir -p workspace
-      - run: echo "Hello, world!" > workspace/echo-output
-
-      # Persist the specified paths (workspace/echo-output) into the workspace for use in downstream job.
+      - run:
+          name: Create file
+          command: |
+            mkdir output
+            echo "Hello from Job 1" > output/hello.txt
       - persist_to_workspace:
-          # Must be an absolute path, or relative path from working_directory. This is a directory in the execution
-          # environment which is taken to be the root directory of the workspace.
-          root: workspace
-          # Must be relative path from root
+          root: output
           paths:
-            - echo-output
+            - hello.txt
 
-  downstream:
-    executor: my-executor
+  read_file:
+    docker:
+      - image: cimg/base:stable
     steps:
       - attach_workspace:
-          # Must be absolute path or relative path from working_directory
-          at: /tmp/workspace
-
-      - run: |
-          if [[ `cat /tmp/workspace/echo-output` == "Hello, world!" ]]; then
-            echo "It worked!";
-          else
-            echo "Nope!"; exit 1
-          fi
+          at: /workspace
+      - run:
+          name: Read file
+          command: cat /workspace/hello.txt
 
 workflows:
-  btd:
+  use_workspace:
     jobs:
-      - flow
-      - downstream:
+      - create_file
+      - read_file:
           requires:
-            - flow
+            - create_file
