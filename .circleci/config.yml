@@ -8,11 +8,11 @@ jobs:
       - run:
           name: Create file to share
           command: |
-            mkdir -p output
-            echo "🛠️ Built by Job 1" > output/result.txt
+            mkdir -p workspace/output
+            echo "🛠️ Built by Job 1" > workspace/output/result.txt
 
       - persist_to_workspace:
-          root: .
+          root: workspace
           paths:
             - output
 
@@ -24,7 +24,7 @@ jobs:
           at: /workspace
 
       - run:
-          name: Show file from previous job
+          name: Read shared file
           command: cat /workspace/output/result.txt
 
 workflows:
