@@ -1,33 +1,37 @@
 version: 2.1
 
 jobs:
-  cache-example:
+  build:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:18.20.2
     steps:
-      - checkout
-
-      - restore_cache:
-          keys:
-            - my-cache-v1
-
       - run:
-          name: Simulate Installing Dependencies
+          name: Create file to share
           command: |
-            mkdir -p dependencies
-            echo "Fake install complete" > dependencies/install.log
+            mkdir -p output
+            echo "🛠️ Built by Job 1" > output/result.txt
 
-      - save_cache:
-          key: my-cache-v1
+      - persist_to_workspace:
+          root: .
           paths:
-            - dependencies
+            - output
+
+  deploy:
+    docker:
+      - image: cimg/node:18.20.2
+    steps:
+      - attach_workspace:
+          at: /workspace
 
       - run:
-          name: Read from Cached Folder
-          command: cat dependencies/install.log
+          name: Show file from previous job
+          command: cat /workspace/output/result.txt
 
 workflows:
   version: 2
-  cache-workflow:
+  workspace-example:
     jobs:
-      - cache-example
+      - build
+      - deploy:
+          requires:
+            - build

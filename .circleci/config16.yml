@@ -1,0 +1,33 @@
+version: 2.1
+
+jobs:
+  cache-example:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - my-cache-v1
+
+      - run:
+          name: Simulate Installing Dependencies
+          command: |
+            mkdir -p dependencies
+            echo "Fake install complete" > dependencies/install.log
+
+      - save_cache:
+          key: my-cache-v1
+          paths:
+            - dependencies
+
+      - run:
+          name: Read from Cached Folder
+          command: cat dependencies/install.log
+
+workflows:
+  version: 2
+  cache-workflow:
+    jobs:
+      - cache-example
