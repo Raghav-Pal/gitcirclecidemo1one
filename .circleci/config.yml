@@ -27,6 +27,12 @@ jobs:
       - run:
           name: Read file
           command: cat /tmp/workspace/echo-output
+      - run:
+          name: List workspace contents
+          command: ls -R /tmp/workspace
+      - run:
+          name: Show file content
+          command: cat /tmp/workspace/echo-output
 
 workflows:
   use_workspace:
