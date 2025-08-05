@@ -1,24 +1,33 @@
 version: 2.1
 
 jobs:
-  save-artifact:
+  cache-example:
     docker:
       - image: cimg/base:stable
     steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - my-cache-v1
+
       - run:
-          name: Create File
-          command: echo "✅ Test Passed" > result.txt
+          name: Simulate Installing Dependencies
+          command: |
+            mkdir -p dependencies
+            echo "Fake install complete" > dependencies/install.log
 
-      - persist_to_workspace:
-          root: .
+      - save_cache:
+          key: my-cache-v1
           paths:
-            - result.txt
+            - dependencies
 
-      - store_artifacts:
-          path: result.txt
-          destination: test-result
+      - run:
+          name: Read from Cached Folder
+          command: cat dependencies/install.log
 
 workflows:
-  save-artifact-workflow:
+  version: 2
+  cache-workflow:
     jobs:
-      - save-artifact
+      - cache-example

@@ -1,0 +1,24 @@
+version: 2.1
+
+jobs:
+  save-artifact:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Create File
+          command: echo "✅ Test Passed" > result.txt
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - result.txt
+
+      - store_artifacts:
+          path: result.txt
+          destination: test-result
+
+workflows:
+  save-artifact-workflow:
+    jobs:
+      - save-artifact
