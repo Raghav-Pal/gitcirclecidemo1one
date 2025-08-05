@@ -1,29 +1,32 @@
 version: 2.1
 
+executors:
+  my-executor:
+    docker:
+      - image: buildpack-deps:jessie
+    working_directory: /tmp
+
 jobs:
   create_file:
-    docker:
-      - image: cimg/base:stable
+    executor: my-executor
+
     steps:
-      - run:
-          name: Create file
-          command: |
-            mkdir output
-            echo "Hello from Job 1" > output/hello.txt
+      - run: mkdir -p workspace
+      - run: echo "Hello, world!" > workspace/echo-output
       - persist_to_workspace:
-          root: output
+          root: workspace
           paths:
-            - hello.txt
+            - echo-output
+    
 
   read_file:
-    docker:
-      - image: cimg/base:stable
+    executor: my-executor
     steps:
       - attach_workspace:
-          at: /workspace
+          at: /tmp/workspace
       - run:
           name: Read file
-          command: cat /workspace/hello.txt
+          command: cat /tmp/workspace/echo-output
 
 workflows:
   use_workspace:
