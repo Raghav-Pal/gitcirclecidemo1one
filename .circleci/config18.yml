@@ -1,0 +1,16 @@
+version: 2.1
+
+jobs:
+  show-secret:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Show ENV Variable
+          command: echo $MY_SECRET
+
+workflows:
+  show_secret_workflow1:
+    jobs:
+      - show-secret:
+      

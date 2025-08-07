@@ -6,11 +6,11 @@ jobs:
       - image: cimg/base:stable
     steps:
       - run:
-          name: Show ENV Variable
-          command: echo $MY_SECRET
+          name: Print Secret Variable
+          command: echo "The secret is $MY_SECRET"
 
 workflows:
-  show_secret_workflow1:
+  version: 2
+  test-secret:
     jobs:
-      - show-secret:
-      
+      - show-secret
