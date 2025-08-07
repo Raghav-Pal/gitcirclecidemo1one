@@ -7,7 +7,8 @@ jobs:
     steps:
       - run:
           name: Print Secret Variable
-          command: bash -c 'echo "Secret is ${MY_SECRET}"'
+          command: |
+            echo "My secret is: " "${MY_SECRET}"
 
 workflows:
   version: 2
