@@ -8,7 +8,7 @@ jobs:
           command: echo $MY_SECRET
 
 workflows:
-  show_secret_workflow:
+  show_secret_workflow1:
     jobs:
       - show-secret:
       
