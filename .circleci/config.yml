@@ -14,4 +14,8 @@ workflows:
   show-secret-workflow:
     jobs:
       - show-context-secret:
+          name: test-reg
+          context: REG
+      - show-context-secret:
+          name: test-qa
           context: QA
