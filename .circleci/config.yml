@@ -8,7 +8,7 @@ jobs:
       - run:
           name: Print Secret Variable
           command: |
-            echo "My secret is: " "${MY_SECRET}"
+            printf 'My secret is: %s\n' "$MY_SECRET"
 
 workflows:
   version: 2
