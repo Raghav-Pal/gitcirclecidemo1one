@@ -1,16 +1,21 @@
 version: 2.1
 
 jobs:
-  show-secret:
+  show-inline-vars:
     docker:
       - image: cimg/base:stable
+    environment:
+      ENV_NAME: development
+      VERSION: 1.0.2
     steps:
       - run:
-          name: Print Secret Variable
-          command: echo "The secret is $MY_SECRET"
+          name: Print Inline Vars
+          command: |
+            echo "ENV_NAME = $ENV_NAME"
+            echo "VERSION = $VERSION"
 
 workflows:
   version: 2
-  test-secret:
+  test-inline-vars:
     jobs:
-      - show-secret
+      - show-inline-vars
