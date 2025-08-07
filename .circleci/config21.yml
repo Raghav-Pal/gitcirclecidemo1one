@@ -1,0 +1,17 @@
+version: 2.1
+
+jobs:
+  show-secret:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Print Secret Variable
+          command: |
+            printf 'My secret is: %s\n' "$MY_SECRET"
+
+workflows:
+  version: 2
+  test-secret:
+    jobs:
+      - show-secret

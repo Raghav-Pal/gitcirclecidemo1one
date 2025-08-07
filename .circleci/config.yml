@@ -1,17 +1,17 @@
 version: 2.1
 
 jobs:
-  show-secret:
+  show-context-secret:
     docker:
       - image: cimg/base:stable
     steps:
       - run:
-          name: Print Secret Variable
-          command: |
-            printf 'My secret is: %s\n' "$MY_SECRET"
+          name: Show secret from context
+          command: echo "NAME = $name"
 
 workflows:
   version: 2
-  test-secret:
+  show-secret-workflow:
     jobs:
-      - show-secret
+      - show-context-secret:
+          context: QA
